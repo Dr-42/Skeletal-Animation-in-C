@@ -12,23 +12,17 @@
 #include "mesh.h"
 #include "assimp_glm_helpers.h"
 
-typedef struct aiScene aiScene;
-typedef struct aiNode aiNode;
-typedef struct aiMesh aiMesh;
-typedef struct aiMaterial aiMaterial;
-typedef enum aiTextureType aiTextureType;
-
 char* dirname(const char* path);
 
 void load_model(model_t* model, const char* path);
-void process_node(model_t* model, aiNode* node, const aiScene* scene);
+void process_node(model_t* model, struct aiNode* node, const struct aiScene* scene);
 void set_vertex_bone_data_to_default(vertex_t* vertex);
-mesh_t* process_mesh(model_t* model, aiMesh* mesh, const aiScene* scene);
+mesh_t* process_mesh(model_t* model, struct aiMesh* mesh, const struct aiScene* scene);
 void set_vertex_bone_data(vertex_t* vertex, int bone_id, float weight);
-void extract_bone_weight_for_vertices(model_t* model, vertex_t* vertices, aiMesh* mesh);
+void extract_bone_weight_for_vertices(model_t* model, vertex_t* vertices, struct aiMesh* mesh);
 
 uint32_t texture_from_file(const char* path, const char* directory, bool gamma);
-texture_t* load_material_textures(model_t* model, aiMaterial* mat, enum aiTextureType type, const char* type_name);
+texture_t* load_material_textures(model_t* model, struct aiMaterial* mat, enum aiTextureType type, const char* type_name);
 
 model_t* model_init(const char* path, bool gamma){
 	model_t* model = malloc(sizeof(model_t));
@@ -53,7 +47,7 @@ char* dirname(const char* path){
 }
 
 void load_model(model_t* model, const char* path){
-	const aiScene* scene = aiImportFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+	const struct aiScene* scene = aiImportFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
 	if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode){
 		fprintf(stderr, "ERROR::ASSIMP::%s\n", aiGetErrorString());
 		return;
@@ -63,9 +57,9 @@ void load_model(model_t* model, const char* path){
 	aiReleaseImport(scene);
 }
 
-void process_node(model_t* model, aiNode* node, const aiScene* scene){
+void process_node(model_t* model, struct aiNode* node, const struct aiScene* scene){
 	for(size_t i = 0; i < node->mNumMeshes; i++){
-		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		struct aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		mesh_t* m = process_mesh(model, mesh, scene);
 		arrput(model->meshes, *m);
 	}
@@ -81,7 +75,7 @@ void set_vertex_bone_data_to_default(vertex_t* vertex){
 	}
 }
 
-mesh_t* process_mesh(model_t* model, aiMesh* mesh, const aiScene* scene){
+mesh_t* process_mesh(model_t* model, struct aiMesh* mesh, const struct aiScene* scene){
 	vertex_t* vertices = NULL;
 	uint32_t* indices = NULL;
 	texture_t* textures = NULL;
@@ -140,7 +134,7 @@ void set_vertex_bone_data(vertex_t* vertex, int bone_id, float weight){
 	}
 }
 
-void extract_bone_weight_for_vertices(model_t* model, vertex_t* vertices, aiMesh* mesh){
+void extract_bone_weight_for_vertices(model_t* model, vertex_t* vertices, struct aiMesh* mesh){
 	bone_info_map_t* bone_info_map = model->bone_info_map;
 	int32_t bone_count = model->bone_counter;
 
@@ -214,7 +208,7 @@ uint32_t texture_from_file(const char* path, const char* directory, bool gamma){
 	return texture_id;
 }
 
-texture_t* load_material_textures(model_t* model, aiMaterial* mat, aiTextureType type, const char* type_name){
+texture_t* load_material_textures(model_t* model, struct aiMaterial* mat, enum aiTextureType type, const char* type_name){
 	texture_t* textures = NULL;
 	uint32_t texture_count = aiGetMaterialTextureCount(mat, type);
 	for(uint32_t i = 0; i < texture_count; i++){
