@@ -167,10 +167,11 @@ void extract_bone_weight_for_vertices(model_t* model, vertex_t* vertices, struct
 
 uint32_t texture_from_file(const char* path, const char* directory, bool gamma){
 	(void)gamma;
-	char* filename = malloc(strlen(path) + strlen(directory) + 1);
+	char* filename = malloc(strlen(path) + strlen(directory) + 2);
 	strcpy(filename, directory);
+	strcat(filename, "/");
 	strcat(filename, path);
-	filename[strlen(path) + strlen(directory)] = '\0';
+	filename[strlen(path) + strlen(directory) + 1] = '\0';
 
 	uint32_t texture_id;
 	glGenTextures(1, &texture_id);
@@ -201,7 +202,7 @@ uint32_t texture_from_file(const char* path, const char* directory, bool gamma){
 
 		stbi_image_free(data);
 	} else {
-		fprintf(stderr, "ERROR::TEXTURE::FAILED_TO_LOAD_AT_PATH: %s\n", path);
+		fprintf(stderr, "ERROR::TEXTURE::FAILED_TO_LOAD_AT_PATH: %s %s\n", path, filename);
 		stbi_image_free(data);
 		exit(EXIT_FAILURE);
 	}
