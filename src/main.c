@@ -82,7 +82,7 @@ int main() {
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         processInput(window);
-        animator_update(animator, deltaTime);
+        // animator_update(animator, deltaTime);
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader_use(shader);
@@ -96,7 +96,7 @@ ourShader.setMat4("view", view);
         glm_perspective(glm_rad(camera->zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f, projection);
         shader_set_mat4(shader, "projection", projection);
         mat4 view;
-        camera_get_view_matrix(camera, &view);
+        camera_get_view_matrix(camera, view);
         shader_set_mat4(shader, "view", view);
 
         for (size_t i = 0; i < arrlenu(animator->final_bone_matrices); ++i) {

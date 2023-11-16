@@ -49,16 +49,12 @@ void read_missing_bones(animation_t* animation, const struct aiAnimation* ai_ani
         const char* bone_name = channel->mNodeName.data;
 
         if (shgeti(bone_info_map, bone_name) == -1) {
-            bone_info_t info = (bone_info_t){
-                .id = bone_count,
-            };
+            bone_info_t info = {0};
+            info.id = bone_count;
             shput(bone_info_map, bone_name, info);
             bone_count++;
         }
         bone_t* bone = bone_init(channel->mNodeName.data, shget(bone_info_map, bone_name).id, channel);
-        if (strcmp(bone_name, "RootNode") == 0) {
-            printf("RootNode\n");
-        }
         arrput(animation->bones, *bone);
     }
     animation->bone_info_map = bone_info_map;

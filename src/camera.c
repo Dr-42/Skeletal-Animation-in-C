@@ -110,8 +110,8 @@ void camera_update_vectors(camera_t* camera) {
     glm_vec3_copy(temp, camera->up);
 }
 
-void camera_get_view_matrix(camera_t* camera, mat4* dest) {
+void camera_get_view_matrix(camera_t* camera, mat4 dest) {
     vec3 center;
     glm_vec3_add(camera->position, camera->front, center);
-    glm_lookat(camera->position, center, camera->up, *dest);
+    glm_lookat(camera->position, center, camera->up, dest);
 }
