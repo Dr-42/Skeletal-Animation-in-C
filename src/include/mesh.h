@@ -5,7 +5,6 @@
 
 #include "shader.h"
 
-#include <stb/stb_ds.h>
 
 #define MAX_BONE_INFLUENCE 4
 
@@ -21,7 +20,7 @@ typedef struct vertex_t {
 
 typedef struct texture_t {
 	uint32_t id;
-	char* type;
+	const char* type;
 	char* path;
 } texture_t;
 
