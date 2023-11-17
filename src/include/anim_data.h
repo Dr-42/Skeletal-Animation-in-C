@@ -1,9 +1,10 @@
 #pragma once
 
-#include <cglm/cglm.h>
 #include <stdint.h>
+
+#include "utils/heim_mat.h"
 
 typedef struct bone_info_t {
 	int32_t id;
-	mat4 offset;
+	HeimMat4 offset;
 } bone_info_t;
