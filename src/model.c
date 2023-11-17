@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "anim_data.h"
 #include "mesh.h"
 #include "assimp_glm_helpers.h"
 
@@ -137,21 +138,20 @@ void set_vertex_bone_data(vertex_t* vertex, int bone_id, float weight) {
 }
 
 void extract_bone_weight_for_vertices(model_t* model, vertex_t* vertices, struct aiMesh* mesh) {
-    bone_info_map_t* bone_info_map = model->bone_info_map;
     int32_t bone_count = model->bone_counter;
 
     for (uint32_t bone_idx = 0; bone_idx < mesh->mNumBones; bone_idx++) {
         int32_t bone_id = -1;
         char* bone_name = mesh->mBones[bone_idx]->mName.data;
-        if (shgeti(bone_info_map, bone_name) == -1) {
+        if (shgeti(model->bone_info_map, bone_name) == -1) {
             bone_info_t info = {0};
             info.id = bone_count;
             convert_matrix_to_glm(&mesh->mBones[bone_idx]->mOffsetMatrix, info.offset);
-            shput(bone_info_map, bone_name, info);
+            shput(model->bone_info_map, bone_name, info);
             bone_id = bone_count;
             bone_count++;
         } else {
-            bone_id = shget(bone_info_map, bone_name).id;
+            bone_id = shget(model->bone_info_map, bone_name).id;
         }
         assert(bone_id != -1);
         struct aiVertexWeight* weights = mesh->mBones[bone_idx]->mWeights;

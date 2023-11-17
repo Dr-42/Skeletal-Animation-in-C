@@ -8,9 +8,9 @@
 #include "assimp_glm_helpers.h"
 
 float get_scale_factor(float last_time_stamp, float next_time_stamp, float animation_time);
-void interpolate_position(bone_t* bone, float animation_time, mat4* dest);
-void interpolate_rotation(bone_t* bone, float animation_time, mat4* dest);
-void interpolate_scaling(bone_t* bone, float animation_time, mat4* dest);
+void interpolate_position(bone_t* bone, float animation_time, mat4 dest);
+void interpolate_rotation(bone_t* bone, float animation_time, mat4 dest);
+void interpolate_scaling(bone_t* bone, float animation_time, mat4 dest);
 
 bone_t* bone_init(const char* name, int32_t id, const struct aiNodeAnim* channel) {
     bone_t* bone = malloc(sizeof(bone_t));
@@ -53,9 +53,9 @@ bone_t* bone_init(const char* name, int32_t id, const struct aiNodeAnim* channel
 
 void bone_update(bone_t* bone, float animation_time) {
     mat4 translation, rotation, scale;
-    interpolate_position(bone, animation_time, &translation);
-    interpolate_rotation(bone, animation_time, &rotation);
-    interpolate_scaling(bone, animation_time, &scale);
+    interpolate_position(bone, animation_time, translation);
+    interpolate_rotation(bone, animation_time, rotation);
+    interpolate_scaling(bone, animation_time, scale);
     glm_mat4_mulN((mat4*[]){&translation, &rotation, &scale}, 3, bone->local_transform);
 }
 
@@ -104,10 +104,10 @@ float get_scale_factor(float last_time_stamp, float next_time_stamp, float anima
     return mid_way_length / frames_length;
 }
 
-void interpolate_position(bone_t* bone, float animation_time, mat4* dest) {
+void interpolate_position(bone_t* bone, float animation_time, mat4 dest) {
     if (bone->num_positions == 1) {
-        glm_mat4_identity(*dest);
-        glm_translate(*dest, bone->positions[0].position);
+        glm_mat4_identity(dest);
+        glm_translate(dest, bone->positions[0].position);
         return;
     }
     int32_t p0_index = get_poisiton_index(bone, animation_time);
@@ -117,10 +117,11 @@ void interpolate_position(bone_t* bone, float animation_time, mat4* dest) {
     glm_vec3_mix(bone->positions[p0_index].position, bone->positions[p1_index].position, scale_factor, final_position);
 }
 
-void interpolate_rotation(bone_t* bone, float animation_time, mat4* dest) {
+void interpolate_rotation(bone_t* bone, float animation_time, mat4 dest) {
     if (bone->num_rotations == 1) {
-        glm_mat4_identity(*dest);
-        glm_quat_rotate(*dest, bone->rotations[0].orientation, *dest);
+        mat4 iden;
+        glm_mat4_identity(iden);
+        glm_quat_rotate(iden, bone->rotations[0].orientation, dest);
         return;
     }
     int32_t p0_index = get_rotation_index(bone, animation_time);
@@ -128,13 +129,13 @@ void interpolate_rotation(bone_t* bone, float animation_time, mat4* dest) {
     float scale_factor = get_scale_factor(bone->rotations[p0_index].time_stamp, bone->rotations[p1_index].time_stamp, animation_time);
     versor final_orientation;
     glm_quat_slerp(bone->rotations[p0_index].orientation, bone->rotations[p1_index].orientation, scale_factor, final_orientation);
-    glm_quat_rotate(*dest, final_orientation, *dest);
+    glm_quat_rotate(dest, final_orientation, dest);
 }
 
-void interpolate_scaling(bone_t* bone, float animation_time, mat4* dest) {
+void interpolate_scaling(bone_t* bone, float animation_time, mat4 dest) {
     if (bone->num_scales == 1) {
-        glm_mat4_identity(*dest);
-        glm_scale(*dest, bone->scales[0].scale);
+        glm_mat4_identity(dest);
+        glm_scale(dest, bone->scales[0].scale);
         return;
     }
     int32_t p0_index = get_scale_index(bone, animation_time);
@@ -142,5 +143,5 @@ void interpolate_scaling(bone_t* bone, float animation_time, mat4* dest) {
     float scale_factor = get_scale_factor(bone->scales[p0_index].time_stamp, bone->scales[p1_index].time_stamp, animation_time);
     vec3 final_scale;
     glm_vec3_mix(bone->scales[p0_index].scale, bone->scales[p1_index].scale, scale_factor, final_scale);
-    glm_scale(*dest, final_scale);
+    glm_scale(dest, final_scale);
 }

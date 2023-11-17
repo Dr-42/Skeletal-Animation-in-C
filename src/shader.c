@@ -1,4 +1,5 @@
 #include "shader.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 shader_t* shader_init(const char* vertex_path, const char* fragment_path){
@@ -124,4 +125,10 @@ void shader_set_mat3(shader_t* shader, const char* name, mat3 value){
 
 void shader_set_mat4(shader_t* shader, const char* name, mat4 value){
 	glUniformMatrix4fv(glGetUniformLocation(shader->id, name), 1, GL_FALSE, &value[0][0]);
+	/*
+	printf("Set mat4: %s\n", name);
+	for(int i = 0; i < 4; i++){
+		printf("%f %f %f %f\n", value[i][0], value[i][1], value[i][2], value[i][3]);
+	}
+	*/
 }

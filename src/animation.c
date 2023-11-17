@@ -51,6 +51,7 @@ void read_missing_bones(animation_t* animation, const struct aiAnimation* ai_ani
         if (shgeti(bone_info_map, bone_name) == -1) {
             bone_info_t info = {0};
             info.id = bone_count;
+            printf("Bone info: %s\n", bone_name);
             shput(bone_info_map, bone_name, info);
             bone_count++;
         }

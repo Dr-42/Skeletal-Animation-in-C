@@ -6,5 +6,5 @@ name = "main"
 src = "src"
 include_dir = "src/include"
 type = 'exe'
-cflags = " -g -gcodeview -Wall -Wextra `pkg-config --cflags freetype2`"
-libs = "-l dbghelp -lglew32 -lglfw3 -lopengl32 `pkg-config --libs freetype2` -lassimp -lm -Wl,--pdb="
+cflags = " -g -Wall -Wextra `pkg-config --cflags freetype2`"
+libs = "-l dbghelp -lglew32 -lglfw3 -lopengl32 `pkg-config --libs freetype2` -lassimp -lm"
