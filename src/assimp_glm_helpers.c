@@ -1,37 +1,44 @@
 #include "assimp_glm_helpers.h"
+#include "utils/heim_vec.h"
 #include <cglm/quat.h>
 
-void convert_matrix_to_glm(struct aiMatrix4x4* matrix, mat4 dest) {
-    dest[0][0] = matrix->a1;
-    dest[1][0] = matrix->a2;
-    dest[2][0] = matrix->a3;
-    dest[3][0] = matrix->a4;
+HeimMat4 convert_matrix_to_glm(struct aiMatrix4x4* matrix){
+    HeimMat4 dest;
+    dest.m[0][0] = matrix->a1;
+    dest.m[1][0] = matrix->a2;
+    dest.m[2][0] = matrix->a3;
+    dest.m[3][0] = matrix->a4;
 
-    dest[0][1] = matrix->b1;
-    dest[1][1] = matrix->b2;
-    dest[2][1] = matrix->b3;
-    dest[3][1] = matrix->b4;
+    dest.m[0][1] = matrix->b1;
+    dest.m[1][1] = matrix->b2;
+    dest.m[2][1] = matrix->b3;
+    dest.m[3][1] = matrix->b4;
 
-    dest[0][2] = matrix->c1;
-    dest[1][2] = matrix->c2;
-    dest[2][2] = matrix->c3;
-    dest[3][2] = matrix->c4;
+    dest.m[0][2] = matrix->c1;
+    dest.m[1][2] = matrix->c2;
+    dest.m[2][2] = matrix->c3;
+    dest.m[3][2] = matrix->c4;
 
-    dest[0][3] = matrix->d1;
-    dest[1][3] = matrix->d2;
-    dest[2][3] = matrix->d3;
-    dest[3][3] = matrix->d4;
+    dest.m[0][3] = matrix->d1;
+    dest.m[1][3] = matrix->d2;
+    dest.m[2][3] = matrix->d3;
+    dest.m[3][3] = matrix->d4;
+    return dest;
 }
 
-void get_glm_vec(struct aiVector3D* vec, vec3 dest) {
-    dest[0] = vec->x;
-    dest[1] = vec->y;
-    dest[2] = vec->z;
+HeimVec3f get_glm_vec(struct aiVector3D* vec){
+    HeimVec3f dest;
+    dest.x = vec->x;
+    dest.y = vec->y;
+    dest.z = vec->z;
+    return dest;
 }
 
-void get_glm_quat(struct aiQuaternion* quat, versor dest) {
-    dest[0] = quat->x;
-    dest[1] = quat->y;
-    dest[2] = quat->z;
-    dest[3] = quat->w;
+HeimVec4f get_glm_quat(struct aiQuaternion* quat){
+    HeimVec4f dest;
+    dest.x = quat->x;
+    dest.y = quat->y;
+    dest.z = quat->z;
+    dest.w = quat->w;
+    return dest;
 }
