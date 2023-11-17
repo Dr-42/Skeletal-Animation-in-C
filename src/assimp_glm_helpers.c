@@ -1,6 +1,5 @@
 #include "assimp_glm_helpers.h"
 #include "utils/heim_vec.h"
-#include <cglm/quat.h>
 
 HeimMat4 convert_matrix_to_glm(struct aiMatrix4x4* matrix){
     HeimMat4 dest;

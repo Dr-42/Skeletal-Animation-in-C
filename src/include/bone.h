@@ -1,22 +1,24 @@
 #pragma once
 
-#include <cglm/cglm.h>
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <stdint.h>
 
+#include "utils/heim_vec.h"
+#include "utils/heim_mat.h"
+
 typedef struct key_position_t {
-	vec3 position;
+	HeimVec3f position;
 	float time_stamp;
 } key_position_t;
 
 typedef struct key_rotation_t {
-	versor orientation;
+	HeimVec4f orientation;
 	float time_stamp;
 } key_rotation_t;
 
 typedef struct key_scale_t {
-	vec3 scale;
+	HeimVec3f scale;
 	float time_stamp;
 } key_scale_t;
 
@@ -28,7 +30,7 @@ typedef struct bone_t {
 	int32_t num_rotations;
 	int32_t num_scales;
 
-	mat4 local_transform;
+	HeimMat4 local_transform;
 	const char* name;
 	int32_t id;
 } bone_t;
