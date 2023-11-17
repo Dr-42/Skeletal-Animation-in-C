@@ -95,7 +95,7 @@ ourShader.setMat4("view", view);
         HeimMat4 view = camera_get_view_matrix(camera);
         shader_set_mat4(shader, "view", view);
 
-        for (size_t i = 0; i < arrlenu(animator->final_bone_matrices); ++i) {
+        for (size_t i = 0; i < 100; ++i) {
             char name[100];
             sprintf(name, "finalBonesMatrices[%d]", i);
             shader_set_mat4(shader, name, animator->final_bone_matrices[i]);

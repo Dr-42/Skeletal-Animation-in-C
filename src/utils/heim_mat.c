@@ -213,7 +213,7 @@ HeimMat3 heim_mat3_from_mat4(HeimMat4 mat) {
     return result;
 }
 
-HeimMat4 heim_mat4f_from_quat(HeimVec4f q){
+HeimMat4 heim_mat4_from_quat(HeimVec4f q){
     float w, x, y, z,
     xx, yy, zz,
     xy, yz, xz,

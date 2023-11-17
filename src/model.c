@@ -86,14 +86,14 @@ mesh_t* process_mesh(model_t* model, struct aiMesh* mesh, const struct aiScene* 
     for (uint32_t i = 0; i < mesh->mNumVertices; i++) {
         vertex_t vertex;
         set_vertex_bone_data_to_default(&vertex);
-        get_glm_vec(&mesh->mVertices[i], vertex.position);
-        get_glm_vec(&mesh->mNormals[i], vertex.normal);
+        vertex.position = get_glm_vec(&mesh->mVertices[i]);
+        vertex.normal = get_glm_vec(&mesh->mNormals[i]);
         if (mesh->mTextureCoords[0]) {
-            vertex.tex_coords[0] = mesh->mTextureCoords[0][i].x;
-            vertex.tex_coords[1] = mesh->mTextureCoords[0][i].y;
+            vertex.tex_coords.x = mesh->mTextureCoords[0][i].x;
+            vertex.tex_coords.y = mesh->mTextureCoords[0][i].y;
         } else {
-            vertex.tex_coords[0] = 0.0f;
-            vertex.tex_coords[1] = 0.0f;
+            vertex.tex_coords.x = 0.0f;
+            vertex.tex_coords.y = 0.0f;
         }
         arrput(vertices, vertex);
     }
@@ -146,7 +146,7 @@ void extract_bone_weight_for_vertices(model_t* model, vertex_t* vertices, struct
         if (shgeti(model->bone_info_map, bone_name) == -1) {
             bone_info_t info = {0};
             info.id = bone_count;
-            convert_matrix_to_glm(&mesh->mBones[bone_idx]->mOffsetMatrix, info.offset);
+            info.offset = convert_matrix_to_glm(&mesh->mBones[bone_idx]->mOffsetMatrix);
             shput(model->bone_info_map, bone_name, info);
             bone_id = bone_count;
             bone_count++;

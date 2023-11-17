@@ -2,6 +2,7 @@
 #include "animation.h"
 #include "bone.h"
 #include "model.h"
+#include "utils/heim_mat.h"
 #include <stddef.h>
 
 animator_t* animator_init(animation_t* animation) {
@@ -33,11 +34,13 @@ void animator_play_animation(animator_t* animator, animation_t* animation) {
 
 void calculate_bone_transform(animator_t* animator, const struct assimp_node_data_t* node, HeimMat4 parent_transform) {
     bone_t* bone = find_bone(animator->animation, node->name);
+    HeimMat4 local_transform = heim_mat4_identity();
     if (bone) {
         bone_update(bone, animator->current_time);
-        memcpy(&node->transformation, &bone->local_transform, sizeof(HeimMat4));
+        //memcpy(&node->transformation, &bone->local_transform, sizeof(HeimMat4));
+        local_transform = bone->local_transform;
     }
-    HeimMat4 global_transformation = heim_mat4_multiply(parent_transform, node->transformation);
+    HeimMat4 global_transformation = heim_mat4_multiply(parent_transform, local_transform);
     /*
     printf("Parent_transform: %s\n", node->name);
     print_matrix(parent_transform);
