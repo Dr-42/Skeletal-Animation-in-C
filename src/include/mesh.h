@@ -1,7 +1,6 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <cglm/cglm.h>
 
 #include "shader.h"
 
@@ -9,11 +8,11 @@
 #define MAX_BONE_INFLUENCE 4
 
 typedef struct vertex_t {
-	vec3 position;
-	vec3 normal;
-	vec2 tex_coords;
-	vec3 tangent;
-	vec3 bitangent;
+	HeimVec3f position;
+	HeimVec3f normal;
+	HeimVec2f tex_coords;
+	HeimVec3f tangent;
+	HeimVec3f bitangent;
 	int32_t bone_ids[MAX_BONE_INFLUENCE];
 	float bone_weights[MAX_BONE_INFLUENCE];
 } vertex_t;

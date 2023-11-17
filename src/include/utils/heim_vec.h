@@ -26,6 +26,8 @@ typedef struct {
     float x, y, z, w;
 } HeimVec4f;
 
+float heim_deg_to_rad(float deg);
+
 /// @brief Add two HeimVec2f vectors
 /// @param a vec 1
 /// @param b vec 2

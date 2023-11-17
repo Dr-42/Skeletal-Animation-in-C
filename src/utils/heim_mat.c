@@ -1,9 +1,8 @@
-#include "math/heim_mat.h"
+#include "utils/heim_mat.h"
 
 #include <stdio.h>
 
-#include "math/heim_math_common.h"
-#include "math/heim_vec.h"
+#include "utils/heim_vec.h"
 
 void heim_mat4_print(HeimMat4 mat) {
     for (size_t i = 0; i < 4; i++) {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/heim_vec.h"
+#include "utils/heim_vec.h"
 
 typedef struct {
     float m[4][4] __attribute__((aligned(16)));

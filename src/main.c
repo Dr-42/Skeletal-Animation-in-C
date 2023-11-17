@@ -1,6 +1,5 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <cglm/cglm.h>
 
 #include "shader.h"
 #include "camera.h"

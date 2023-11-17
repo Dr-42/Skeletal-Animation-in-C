@@ -1,4 +1,8 @@
-#include "math/heim_vec.h"
+#include "utils/heim_vec.h"
+
+float heim_deg_to_rad(float deg) {
+    return deg * (M_PI / 180.0f);
+}
 
 HeimVec2f heim_vec2f_add(HeimVec2f a, HeimVec2f b) {
     return (HeimVec2f){a.x + b.x, a.y + b.y};

@@ -1,6 +1,7 @@
 #include "mesh.h"
 
 #include <stdint.h>
+#include <stdio.h>
 #include <stb/stb_ds.h>
 
 void setup_mesh(mesh_t* mesh);
