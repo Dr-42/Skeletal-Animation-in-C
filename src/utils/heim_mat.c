@@ -1,7 +1,5 @@
 #include "utils/heim_mat.h"
 
-#include <cglm/quat.h>
-#include <cglm/types.h>
 #include <stdio.h>
 
 #include "utils/heim_vec.h"
