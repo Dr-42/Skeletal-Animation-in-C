@@ -1,15 +1,15 @@
 #pragma once
 
-#include <cglm/cglm.h>
 #include <stdint.h>
 
 #include "bone.h"
 #include "model.h"
+#include "utils/heim_mat.h"
 
 typedef struct assimp_node_data_t assimp_node_data_t;
 
 typedef struct assimp_node_data_t {
-    mat4 transformation;
+    HeimMat4 transformation;
     char* name;
     int32_t children_count;
     assimp_node_data_t* children;

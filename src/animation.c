@@ -4,6 +4,7 @@
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <stdio.h>
 
 #include <assert.h>
 #include <stdint.h>
@@ -65,7 +66,7 @@ void read_heirarchy_data(assimp_node_data_t* dest, const struct aiNode* src) {
     assert(src);
     dest->name = malloc(strlen(src->mName.data) + 1);
     strcpy(dest->name, src->mName.data);
-    convert_matrix_to_glm(&src->mTransformation, dest->transformation);
+    dest->transformation = convert_matrix_to_glm(&src->mTransformation);
     dest->children_count = src->mNumChildren;
 
     for (uint32_t i = 0; i < src->mNumChildren; i++) {

@@ -5,6 +5,8 @@
 #include "camera.h"
 #include "animator.h"
 #include "model.h"
+#include "utils/heim_mat.h"
+#include "utils/heim_vec.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -67,10 +69,7 @@ int main() {
     }
     stbi_set_flip_vertically_on_load(true);
     glEnable(GL_DEPTH_TEST);
-    vec3 cameraPos;
-    cameraPos[0] = 0.0f;
-    cameraPos[1] = 0.0f;
-    cameraPos[2] = 3.0f;
+    HeimVec3f cameraPos = {0.0f, 0.0f, 3.0f};
     camera = camera_init(cameraPos);
     shader_t* shader = shader_init("src/assets/shaders/anim_model.vs", "src/assets/shaders/anim_model.fs");
     model_t* our_model = model_init("src/assets/models/dancing_vampire.dae", true);
@@ -91,11 +90,9 @@ glm::mat4 view = camera.GetViewMatrix();
 ourShader.setMat4("projection", projection);
 ourShader.setMat4("view", view);
         */
-        mat4 projection;
-        glm_perspective(glm_rad(camera->zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f, projection);
+        HeimMat4 projection = heim_mat4_perspective(camera->zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         shader_set_mat4(shader, "projection", projection);
-        mat4 view;
-        camera_get_view_matrix(camera, view);
+        HeimMat4 view = camera_get_view_matrix(camera);
         shader_set_mat4(shader, "view", view);
 
         for (size_t i = 0; i < arrlenu(animator->final_bone_matrices); ++i) {
@@ -103,18 +100,11 @@ ourShader.setMat4("view", view);
             sprintf(name, "finalBonesMatrices[%d]", i);
             shader_set_mat4(shader, name, animator->final_bone_matrices[i]);
         }
-        mat4 model;
-        glm_mat4_identity(model);
-        vec3 tranlation_vec;
-        tranlation_vec[0] = 0.0f;
-        tranlation_vec[1] = -1.75f;
-        tranlation_vec[2] = 0.0f;
-        glm_translate(model, tranlation_vec);
-        vec3 scale_vec;
-        scale_vec[0] = 0.5f;
-        scale_vec[1] = 0.5f;
-        scale_vec[2] = 0.5f;
-        glm_scale(model, scale_vec);
+        HeimMat4 model = heim_mat4_identity();
+        HeimVec3f tranlation_vec = {0.0f, -1.75f, 0.0f};
+        model = heim_mat4_translate(model, tranlation_vec);
+        HeimVec3f scale_vec = {0.5f, 0.5f, 0.5f};
+        model = heim_mat4_scale(model, scale_vec);
         shader_set_mat4(shader, "model", model);
         model_draw(our_model, shader);
         glfwSwapBuffers(window);
