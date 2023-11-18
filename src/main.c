@@ -72,8 +72,8 @@ int main() {
     HeimVec3f cameraPos = {0.0f, 0.0f, 3.0f};
     camera = camera_init(cameraPos);
     shader_t* shader = shader_init("src/assets/shaders/anim_model.vs", "src/assets/shaders/anim_model.fs");
-    model_t* our_model = model_init("src/assets/models/dancing_vampire.dae", true);
-    animation_t* danceAnimation = animation_init("src/assets/models/dancing_vampire.dae", our_model);
+    model_t* our_model = model_init("src/assets/models/Mar/maria.dae", true);
+    animation_t* danceAnimation = animation_init("src/assets/models/Mar/maria.dae", our_model);
     animator_t* animator = animator_init(danceAnimation);
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
