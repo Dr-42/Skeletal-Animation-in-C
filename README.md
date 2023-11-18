@@ -13,3 +13,7 @@ To enable the stack trace thingy on windows, follow the additional steps in the 
 cargo install builder_cpp
 builder_cpp -br
 ```
+## Demo
+
+https://github.com/Dr-42/Skeletal-Animation-in-C/assets/64161204/8328ebdb-735c-436d-9d83-019d2f132581
+
