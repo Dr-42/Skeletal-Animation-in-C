@@ -33,20 +33,22 @@ camera_t* camera_init(HeimVec3f position) {
 void camera_process_keyboard(camera_t* camera, camera_movement_t direction, float delta_time) {
     float velocity = camera->movement_speed * delta_time;
     if (direction == FORWARD) {
-        camera->position = heim_vec3f_mul(camera->front, velocity);
-        camera->position = heim_vec3f_add(camera->position, camera->position);
+        camera->position = heim_vec3f_add(camera->position,
+            heim_vec3f_mul(heim_vec3f_normalize(camera->front), velocity));
     }
     if (direction == BACKWARD) {
-        camera->position = heim_vec3f_mul(camera->front, velocity);
-        camera->position = heim_vec3f_sub(camera->position, camera->position);
+        camera->position = heim_vec3f_sub(camera->position,
+            heim_vec3f_mul(heim_vec3f_normalize(camera->front), velocity));
     }
     if (direction == LEFT) {
-        camera->position = heim_vec3f_mul(camera->right, velocity);
-        camera->position = heim_vec3f_sub(camera->position, camera->position);
+        camera->position = heim_vec3f_sub(camera->position,
+            heim_vec3f_mul(
+            heim_vec3f_normalize(heim_vec3f_cross(camera->front, camera->up)), velocity));
     }
     if (direction == RIGHT) {
-        camera->position = heim_vec3f_mul(camera->right, velocity);
-        camera->position = heim_vec3f_add(camera->position, camera->position);
+        camera->position = heim_vec3f_add(camera->position,
+            heim_vec3f_mul(
+            heim_vec3f_normalize(heim_vec3f_cross(camera->front, camera->up)), velocity));
     }
 }
 
