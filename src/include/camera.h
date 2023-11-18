@@ -10,6 +10,8 @@ typedef enum camera_movement_t {
     BACKWARD,
     LEFT,
     RIGHT,
+	UP,
+	DOWN
 } camera_movement_t;
 
 typedef struct camera_t {

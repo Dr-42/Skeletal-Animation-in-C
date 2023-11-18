@@ -33,7 +33,8 @@ shader_t* shader_init(const char* vertex_path, const char* fragment_path){
 	fragment_code[fragment_file_size] = '\0';
 
 	uint32_t vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex_shader, 1, &vertex_code, NULL);
+	const GLchar* vertex_code_ptr = vertex_code;
+	glShaderSource(vertex_shader, 1, &vertex_code_ptr, NULL);
 	glCompileShader(vertex_shader);
 	int32_t success;
 	char info_log[512];
@@ -45,7 +46,8 @@ shader_t* shader_init(const char* vertex_path, const char* fragment_path){
 	}
 
 	uint32_t fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment_shader, 1, &fragment_code, NULL);
+	const GLchar* fragment_code_ptr = fragment_code;
+	glShaderSource(fragment_shader, 1, &fragment_code_ptr, NULL);
 	glCompileShader(fragment_shader);
 	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
 	if(!success){

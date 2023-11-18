@@ -50,6 +50,14 @@ void camera_process_keyboard(camera_t* camera, camera_movement_t direction, floa
             heim_vec3f_mul(
             heim_vec3f_normalize(heim_vec3f_cross(camera->front, camera->up)), velocity));
     }
+    if (direction == UP) {
+        camera->position = heim_vec3f_add(camera->position,
+            heim_vec3f_mul(heim_vec3f_normalize(camera->up), velocity));
+    }
+    if (direction == DOWN) {
+        camera->position = heim_vec3f_sub(camera->position,
+            heim_vec3f_mul(heim_vec3f_normalize(camera->up), velocity));
+    }
 }
 
 void camera_process_mouse_movement(camera_t* camera, float x_offset, float y_offset, bool constrain_pitch) {

@@ -26,7 +26,7 @@ void mesh_draw(mesh_t* mesh, shader_t* shader) {
     for (uint32_t i = 0; i < arrlenu(mesh->textures); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
         char number[2];
-        char* name = mesh->textures[i].type;
+        const char* name = mesh->textures[i].type;
         if (strcmp(name, "texture_diffuse") == 0) {
             sprintf(number, "%d", diffuse_nr++);
         } else if (strcmp(name, "texture_specular") == 0) {
