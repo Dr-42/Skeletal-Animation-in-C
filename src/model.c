@@ -129,7 +129,7 @@ mesh_t* process_mesh(model_t* model, struct aiMesh* mesh, const struct aiScene* 
 
 void set_vertex_bone_data(vertex_t* vertex, int bone_id, float weight) {
     for (size_t i = 0; i < MAX_BONE_INFLUENCE; i++) {
-        if (vertex->bone_weights[i] < 0.0f) {
+        if (vertex->bone_ids[i] < 0.0f) {
             vertex->bone_ids[i] = bone_id;
             vertex->bone_weights[i] = weight;
             return;

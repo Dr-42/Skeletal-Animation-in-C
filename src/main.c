@@ -84,15 +84,9 @@ int main() {
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader_use(shader);
-        /*
-glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-glm::mat4 view = camera.GetViewMatrix();
-ourShader.setMat4("projection", projection);
-ourShader.setMat4("view", view);
-        */
         HeimMat4 projection = heim_mat4_perspective(camera->zoom, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        shader_set_mat4(shader, "projection", projection);
         HeimMat4 view = camera_get_view_matrix(camera);
+        shader_set_mat4(shader, "projection", projection);
         shader_set_mat4(shader, "view", view);
 
         for (size_t i = 0; i < 100; ++i) {
