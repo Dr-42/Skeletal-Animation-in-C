@@ -89,10 +89,10 @@ int main() {
         HeimMat4 view = camera_get_view_matrix(camera);
         shader_set_mat4(shader, "projection", projection);
         shader_set_mat4(shader, "view", view);
-
-        for (size_t i = 0; i < 100; ++i) {
+        shader_set_int(shader, "numBones", (int)arrlenu(animator->final_bone_matrices));
+        for (size_t i = 0; i < arrlenu(animator->final_bone_matrices); ++i) {
             char name[100];
-            sprintf(name, "finalBonesMatrices[%d]", i);
+            sprintf(name, "finalBonesMatrices[%llu]", i);
             shader_set_mat4(shader, name, animator->final_bone_matrices[i]);
         }
         HeimMat4 model = heim_mat4_identity();

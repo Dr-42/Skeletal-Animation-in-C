@@ -3,7 +3,7 @@
 #include "animation.h"
 
 typedef struct animator_t {
-    HeimMat4 final_bone_matrices[100];
+    HeimMat4* final_bone_matrices;
     animation_t* animation;
     float current_time;
     float delta_time;

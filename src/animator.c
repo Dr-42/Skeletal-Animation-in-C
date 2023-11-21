@@ -5,15 +5,14 @@
 #include "model.h"
 #include "utils/heim_mat.h"
 #include <stddef.h>
-#include <stdio.h>
 
 animator_t* animator_init(animation_t* animation) {
     animator_t* animator = malloc(sizeof(animator_t));
     memset(animator, 0, sizeof(animator_t));
     animator->animation = animation;
     animator->current_time = 0.0f;
-    // arrsetlen(animator->final_bone_matrices, 100);
-    for (size_t i = 0; i < 100; i++) {
+    arrsetlen(animator->final_bone_matrices, arrlenu(animation->bones));
+    for (size_t i = 0; i < arrlenu(animation->bones); i++) {
         animator->final_bone_matrices[i] = heim_mat4_identity();
     }
     return animator;

@@ -14,6 +14,7 @@ uniform mat4 model;
 
 const int MAX_BONES = 100;
 const int MAX_BONE_INFLUENCE = 4;
+uniform int numBones;
 uniform mat4 finalBonesMatrices[MAX_BONES];
 
 out vec2 TexCoords;
@@ -25,7 +26,7 @@ void main()
     {
         if(boneIds[i] == -1) 
             continue;
-        if(boneIds[i] >=MAX_BONES) 
+        if(boneIds[i] >=numBones)
         {
             totalPosition = vec4(pos,1.0f);
             break;
