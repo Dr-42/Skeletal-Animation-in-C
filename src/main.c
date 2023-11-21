@@ -45,6 +45,10 @@ void set_signal_handlers() {
     signal(SIGSEGV, segfaulter);
 }
 
+typedef struct BoneMatrices {
+    HeimMat4 finalBonesMatrices[100];
+} BoneMatrices;
+
 int main() {
     set_signal_handlers();
     glfwInit();
@@ -90,11 +94,18 @@ int main() {
         shader_set_mat4(shader, "projection", projection);
         shader_set_mat4(shader, "view", view);
         shader_set_int(shader, "numBones", (int)arrlenu(animator->final_bone_matrices));
-        for (size_t i = 0; i < arrlenu(animator->final_bone_matrices); ++i) {
-            char name[100];
-            sprintf(name, "finalBonesMatrices[%llu]", i);
-            shader_set_mat4(shader, name, animator->final_bone_matrices[i]);
-        }
+
+        BoneMatrices boneMatrices;
+        memcpy(boneMatrices.finalBonesMatrices, animator->final_bone_matrices, sizeof(HeimMat4) * arrlenu(animator->final_bone_matrices));
+        GLuint ubo;
+        glGenBuffers(1, &ubo);
+        glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(boneMatrices), NULL, GL_DYNAMIC_DRAW);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
+        glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(boneMatrices), &boneMatrices);
+        glUnmapBuffer(GL_UNIFORM_BUFFER);
+
         HeimMat4 model = heim_mat4_identity();
         HeimVec3f tranlation_vec = {0.0f, -0.8f, 0.0f};
         model = heim_mat4_translate(model, tranlation_vec);
