@@ -23,6 +23,9 @@ animation_t* animation_init(const char* path, model_t* model) {
     const struct aiScene* scene = aiImportFile(path, aiProcess_Triangulate);
     assert(scene && scene->mRootNode);
     struct aiAnimation* animation = scene->mAnimations[0];
+    for (uint32_t i = 0; i < scene->mNumAnimations; i++) {
+        printf("%u] Animation name: %s\n",i, scene->mAnimations[i]->mName.data);
+    }
     anim->duration = animation->mDuration;
     anim->ticks_per_second = animation->mTicksPerSecond;
     read_heirarchy_data(&anim->root_node, scene->mRootNode);

@@ -20,7 +20,6 @@ typedef struct vertex_t {
 typedef struct texture_t {
 	uint32_t id;
 	const char* type;
-	char* path;
 } texture_t;
 
 typedef struct mesh_t {
@@ -33,4 +32,9 @@ typedef struct mesh_t {
 } mesh_t;
 
 mesh_t* mesh_init(vertex_t* vertices, uint32_t* indices, texture_t* textures);
+
+void mesh_set_albedo(mesh_t* mesh, texture_t* albedo);
+void mesh_set_normal(mesh_t* mesh, texture_t* normal);
+void mesh_set_metallic(mesh_t* mesh, texture_t* metallic);
+
 void mesh_draw(mesh_t* mesh, shader_t* shader);

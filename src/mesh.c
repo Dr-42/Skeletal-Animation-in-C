@@ -21,7 +21,6 @@ void mesh_draw(mesh_t* mesh, shader_t* shader) {
     uint32_t diffuse_nr = 1;
     uint32_t specular_nr = 1;
     uint32_t normal_nr = 1;
-    uint32_t height_nr = 1;
 
     for (uint32_t i = 0; i < arrlenu(mesh->textures); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -33,8 +32,6 @@ void mesh_draw(mesh_t* mesh, shader_t* shader) {
             sprintf(number, "%d", specular_nr++);
         } else if (strcmp(name, "texture_normal") == 0) {
             sprintf(number, "%d", normal_nr++);
-        } else if (strcmp(name, "texture_height") == 0) {
-            sprintf(number, "%d", height_nr++);
         }
         char* final_name = malloc(strlen(name) + strlen(number) + 1);
         strcpy(final_name, name);
@@ -78,4 +75,16 @@ void setup_mesh(mesh_t* mesh) {
     glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, bone_weights));
 
     glBindVertexArray(0);
+}
+
+void mesh_set_albedo(mesh_t* mesh, texture_t* albedo){
+    arrput(mesh->textures, *albedo);
+}
+
+void mesh_set_normal(mesh_t* mesh, texture_t* normal){
+    arrput(mesh->textures, *normal);
+}
+
+void mesh_set_metallic(mesh_t* mesh, texture_t* metallic){
+    arrput(mesh->textures, *metallic);
 }

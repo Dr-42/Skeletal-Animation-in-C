@@ -22,8 +22,7 @@ mesh_t* process_mesh(model_t* model, struct aiMesh* mesh, const struct aiScene* 
 void set_vertex_bone_data(vertex_t* vertex, int bone_id, float weight);
 void extract_bone_weight_for_vertices(model_t* model, vertex_t* vertices, struct aiMesh* mesh);
 
-uint32_t texture_from_file(const char* path, const char* directory, bool gamma);
-texture_t* load_material_textures(model_t* model, struct aiMaterial* mat, enum aiTextureType type, const char* type_name);
+texture_t* texture_from_file(const char* path, bool gamma, const char* type);
 
 model_t* model_init(const char* path, bool gamma) {
     model_t* model = malloc(sizeof(model_t));
@@ -40,6 +39,25 @@ void model_draw(model_t* model, shader_t* shader) {
     }
 }
 
+void model_set_albedo(model_t* model, const char* albedo_path){
+    for(size_t i = 0; i < arrlenu(model->meshes); i++) {
+        mesh_set_albedo(&model->meshes[i], texture_from_file(albedo_path, model->gamma_correction, "texture_diffuse"));
+    }
+}
+
+void model_set_normal(model_t* model, const char* normal_path){
+    for(size_t i = 0; i < arrlenu(model->meshes); i++) {
+        mesh_set_normal(&model->meshes[i], texture_from_file(normal_path, model->gamma_correction, "texture_normal"));
+    }
+}
+
+void model_set_metallic(model_t* model, const char* metallic_path){
+    for(size_t i = 0; i < arrlenu(model->meshes); i++) {
+        mesh_set_metallic(&model->meshes[i], texture_from_file(metallic_path, model->gamma_correction, "texture_metallic"));
+    }
+}
+
+
 char* dirname(const char* path) {
     char* dir = strdup(path);
     char* last_slash = strrchr(dir, '/');
@@ -54,6 +72,13 @@ void load_model(model_t* model, const char* path) {
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         fprintf(stderr, "ERROR::ASSIMP::%s\n", aiGetErrorString());
         return;
+    }
+    char* npath = strdup(path);
+    for(size_t i = strlen(npath) - 1; i > 0; i--) {
+        if (npath[i] == '\\') {
+            npath[i] = '/';
+            break;
+        }
     }
     model->directory = dirname(path);
     process_node(model, scene->mRootNode, scene);
@@ -104,24 +129,6 @@ mesh_t* process_mesh(model_t* model, struct aiMesh* mesh, const struct aiScene* 
         }
     }
 
-    struct aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-    texture_t* diffuse_maps = load_material_textures(model, material, aiTextureType_DIFFUSE, "texture_diffuse");
-    for (size_t i = 0; i < arrlenu(diffuse_maps); i++) {
-        arrput(textures, diffuse_maps[i]);
-    }
-    texture_t* specular_maps = load_material_textures(model, material, aiTextureType_SPECULAR, "texture_specular");
-    for (size_t i = 0; i < arrlenu(specular_maps); i++) {
-        arrput(textures, specular_maps[i]);
-    }
-    texture_t* normal_maps = load_material_textures(model, material, aiTextureType_HEIGHT, "texture_normal");
-    for (size_t i = 0; i < arrlenu(normal_maps); i++) {
-        arrput(textures, normal_maps[i]);
-    }
-    texture_t* height_maps = load_material_textures(model, material, aiTextureType_AMBIENT, "texture_height");
-    for (size_t i = 0; i < arrlenu(height_maps); i++) {
-        arrput(textures, height_maps[i]);
-    }
-
     extract_bone_weight_for_vertices(model, vertices, mesh);
     mesh_t* ret_mesh = mesh_init(vertices, indices, textures);
     return ret_mesh;
@@ -166,18 +173,13 @@ void extract_bone_weight_for_vertices(model_t* model, vertex_t* vertices, struct
     }
 }
 
-uint32_t texture_from_file(const char* path, const char* directory, bool gamma) {
+texture_t* texture_from_file(const char* path, bool gamma, const char* type) {
     (void)gamma;
-    char* filename = malloc(strlen(path) + strlen(directory) + 2);
-    strcpy(filename, directory);
-    strcat(filename, "/");
-    strcat(filename, path);
-    filename[strlen(path) + strlen(directory) + 1] = '\0';
 
     uint32_t texture_id;
     glGenTextures(1, &texture_id);
     int32_t width, height, nr_components;
-    uint8_t* data = stbi_load(filename, &width, &height, &nr_components, 0);
+    uint8_t* data = stbi_load(path, &width, &height, &nr_components, 0);
     if (data) {
         GLenum format;
         if (nr_components == 1) {
@@ -202,35 +204,13 @@ uint32_t texture_from_file(const char* path, const char* directory, bool gamma) 
 
         stbi_image_free(data);
     } else {
-        fprintf(stderr, "ERROR::TEXTURE::FAILED_TO_LOAD_AT_PATH: %s %s\n", path, filename);
+        fprintf(stderr, "ERROR::TEXTURE::FAILED_TO_LOAD_AT_PATH: %s\n", path);
         stbi_image_free(data);
         exit(EXIT_FAILURE);
     }
-    return texture_id;
-}
+    texture_t* texture = malloc(sizeof(texture_t));
+    texture->id = texture_id;
+    texture->type = type;
 
-texture_t* load_material_textures(model_t* model, struct aiMaterial* mat, enum aiTextureType type, const char* type_name) {
-    texture_t* textures = NULL;
-    uint32_t texture_count = aiGetMaterialTextureCount(mat, type);
-    for (uint32_t i = 0; i < texture_count; i++) {
-        struct aiString str;
-        aiGetMaterialTexture(mat, type, i, &str, NULL, NULL, NULL, NULL, NULL, NULL);
-        bool skip = false;
-        for (uint32_t j = 0; j < arrlenu(model->textures_loaded); j++) {
-            if (strcmp(model->textures_loaded[j].path, str.data) == 0) {
-                arrput(textures, model->textures_loaded[j]);
-                skip = true;
-                break;
-            }
-        }
-        if (!skip) {
-            texture_t texture;
-            texture.id = texture_from_file(str.data, model->directory, model->gamma_correction);
-            texture.type = type_name;
-            texture.path = str.data;
-            arrput(textures, texture);
-            arrput(model->textures_loaded, texture);
-        }
-    }
-    return textures;
+    return texture;
 }

@@ -77,8 +77,13 @@ int main() {
     HeimVec3f cameraPos = {0.0f, 0.0f, 2.5f};
     camera = camera_init(cameraPos);
     shader_t* shader = shader_init("src/assets/shaders/anim_model.vs", "src/assets/shaders/anim_model.fs");
-    model_t* our_model = model_init("src/assets/models/Mar/maria.dae", true);
-    animation_t* danceAnimation = animation_init("src/assets/models/Mar/maria.dae", our_model);
+    model_t* our_model = model_init("src/assets/models/Marn/mat2.fbx", true);
+
+    model_set_albedo(our_model, "src/assets/models/Maria/textures/maria_diffuse.png");
+    model_set_normal(our_model, "src/assets/models/Maria/textures/maria_normal.png");
+    model_set_metallic(our_model, "src/assets/models/Maria/textures/maria_specular.png");
+
+    animation_t* danceAnimation = animation_init("src/assets/models/Maria/Maria.glb", our_model);
     animator_t* animator = animator_init(danceAnimation);
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();

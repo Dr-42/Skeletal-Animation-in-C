@@ -11,7 +11,7 @@ typedef struct bone_info_map_t {
 } bone_info_map_t;
 
 typedef struct model_t {
-	texture_t* textures_loaded;
+	texture_t* textures;
 	mesh_t* meshes;
 	const char* directory;
 	bool gamma_correction;
@@ -21,4 +21,7 @@ typedef struct model_t {
 } model_t;
 
 model_t* model_init(const char* path, bool gamma);
+void model_set_albedo(model_t* model, const char* albedo_path);
+void model_set_normal(model_t* model, const char* normal_path);
+void model_set_metallic(model_t* model, const char* metallic_path);
 void model_draw(model_t* model, shader_t* shader);
