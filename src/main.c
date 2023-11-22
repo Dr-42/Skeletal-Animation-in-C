@@ -49,6 +49,8 @@ typedef struct BoneMatrices {
     HeimMat4 finalBonesMatrices[100];
 } BoneMatrices;
 
+animator_t* animator;
+
 int main() {
     set_signal_handlers();
     glfwInit();
@@ -83,8 +85,7 @@ int main() {
     model_set_normal(our_model, "src/assets/models/Maria/textures/maria_normal.png");
     model_set_metallic(our_model, "src/assets/models/Maria/textures/maria_specular.png");
 
-    animation_t* danceAnimation = animation_init("src/assets/models/Maria/Maria.glb", our_model);
-    animator_t* animator = animator_init(danceAnimation);
+    animator = animator_init("src/assets/models/Maria/Maria.glb", our_model);
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -154,6 +155,37 @@ void processInput(GLFWwindow* window) {
             glfwSetWindowMonitor(window, NULL, 0, 0, SCR_WIDTH, SCR_HEIGHT, GLFW_DONT_CARE);
             full_screen = false;
         }
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+        animator_switch_animation(animator, 0);
+    }
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+        animator_switch_animation(animator, 1);
+    }
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+        animator_switch_animation(animator, 2);
+    }
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+        animator_switch_animation(animator, 3);
+    }
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
+        animator_switch_animation(animator, 4);
+    }
+    if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS) {
+        animator_switch_animation(animator, 5);
+    }
+    if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
+        animator_switch_animation(animator, 6);
+    }
+    if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
+        animator_switch_animation(animator, 7);
+    }
+    if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
+        animator_switch_animation(animator, 8);
+    }
+    if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
+        animator_switch_animation(animator, 9);
     }
 
 }

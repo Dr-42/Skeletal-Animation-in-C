@@ -21,7 +21,8 @@ typedef struct animation_t {
     bone_t* bones;
     assimp_node_data_t root_node;
     bone_info_map_t* bone_info_map;
+    char* name;
 } animation_t;
 
-animation_t* animation_init(const char* path, model_t* model);
+animation_t* animation_init(const struct aiScene* scene, struct aiAnimation* animation, model_t* model);
 bone_t* find_bone(animation_t* animation, const char* name);

@@ -16,21 +16,15 @@
 void read_missing_bones(animation_t* animation, const struct aiAnimation* ai_animation, model_t* model);
 void read_heirarchy_data(assimp_node_data_t* assimp_node_data, const struct aiNode* src);
 
-animation_t* animation_init(const char* path, model_t* model) {
+animation_t* animation_init(const struct aiScene* scene, struct aiAnimation* animation, model_t* model) {
     animation_t* anim = malloc(sizeof(animation_t));
     memset(anim, 0, sizeof(animation_t));
-
-    const struct aiScene* scene = aiImportFile(path, aiProcess_Triangulate);
-    assert(scene && scene->mRootNode);
-    struct aiAnimation* animation = scene->mAnimations[0];
-    for (uint32_t i = 0; i < scene->mNumAnimations; i++) {
-        printf("%u] Animation name: %s\n",i, scene->mAnimations[i]->mName.data);
-    }
     anim->duration = animation->mDuration;
     anim->ticks_per_second = animation->mTicksPerSecond;
+    anim->name = malloc(strlen(animation->mName.data) + 1);
+    strcpy(anim->name, animation->mName.data);
     read_heirarchy_data(&anim->root_node, scene->mRootNode);
     read_missing_bones(anim, animation, model);
-    // aiReleaseImport(scene);
     return anim;
 }
 
