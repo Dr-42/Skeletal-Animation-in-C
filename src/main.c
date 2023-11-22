@@ -77,7 +77,7 @@ int main() {
     HeimVec3f cameraPos = {0.0f, 0.0f, 2.5f};
     camera = camera_init(cameraPos);
     shader_t* shader = shader_init("src/assets/shaders/anim_model.vs", "src/assets/shaders/anim_model.fs");
-    model_t* our_model = model_init("src/assets/models/Marn/mat2.fbx", true);
+    model_t* our_model = model_init("src/assets/models/Maria/Maria.glb", true);
 
     model_set_albedo(our_model, "src/assets/models/Maria/textures/maria_diffuse.png");
     model_set_normal(our_model, "src/assets/models/Maria/textures/maria_normal.png");
