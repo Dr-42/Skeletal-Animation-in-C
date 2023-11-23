@@ -5,8 +5,12 @@
 typedef struct animator_t {
     HeimMat4* final_bone_matrices;
     animation_t* current_animation;
-	animation_t** animations;
+    animation_t* blend_animation;
+    float blend_factor;
+    float blend_speed;
+    animation_t** animations;
     float current_time;
+    float blend_time;
     float delta_time;
 } animator_t;
 
