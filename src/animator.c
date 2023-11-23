@@ -32,6 +32,7 @@ animator_t* animator_init(const char* path, model_t* model) {
     for (size_t i = 0; i < arrlenu(animator->current_animation->bones); i++) {
         animator->final_bone_matrices[i] = heim_mat4_identity();
     }
+    aiReleaseImport(scene);
     return animator;
 }
 

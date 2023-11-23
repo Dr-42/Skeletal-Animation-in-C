@@ -13,7 +13,6 @@ typedef struct bone_info_map_t {
 typedef struct model_t {
 	texture_t* textures;
 	mesh_t* meshes;
-	const char* directory;
 	bool gamma_correction;
 
 	bone_info_map_t* bone_info_map;

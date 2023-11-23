@@ -13,8 +13,6 @@
 #include "mesh.h"
 #include "assimp_glm_helpers.h"
 
-char* dirname(const char* path);
-
 void load_model(model_t* model, const char* path);
 void process_node(model_t* model, struct aiNode* node, const struct aiScene* scene);
 void set_vertex_bone_data_to_default(vertex_t* vertex);
@@ -57,32 +55,14 @@ void model_set_metallic(model_t* model, const char* metallic_path){
     }
 }
 
-
-char* dirname(const char* path) {
-    char* dir = strdup(path);
-    char* last_slash = strrchr(dir, '/');
-    if (last_slash) {
-        *last_slash = '\0';
-    }
-    return dir;
-}
-
 void load_model(model_t* model, const char* path) {
     const struct aiScene* scene = aiImportFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         fprintf(stderr, "ERROR::ASSIMP::%s\n", aiGetErrorString());
         return;
     }
-    char* npath = strdup(path);
-    for(size_t i = strlen(npath) - 1; i > 0; i--) {
-        if (npath[i] == '\\') {
-            npath[i] = '/';
-            break;
-        }
-    }
-    model->directory = dirname(path);
     process_node(model, scene->mRootNode, scene);
-    // aiReleaseImport(scene);
+    aiReleaseImport(scene);
 }
 
 void process_node(model_t* model, struct aiNode* node, const struct aiScene* scene) {
@@ -149,7 +129,7 @@ void extract_bone_weight_for_vertices(model_t* model, vertex_t* vertices, struct
 
     for (uint32_t bone_idx = 0; bone_idx < mesh->mNumBones; bone_idx++) {
         int32_t bone_id = -1;
-        char* bone_name = mesh->mBones[bone_idx]->mName.data;
+        char* bone_name = strdup(mesh->mBones[bone_idx]->mName.data);
         if (shgeti(model->bone_info_map, bone_name) == -1) {
             bone_info_t info = {0};
             info.id = bone_count;

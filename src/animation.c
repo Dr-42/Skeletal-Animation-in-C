@@ -44,7 +44,7 @@ void read_missing_bones(animation_t* animation, const struct aiAnimation* ai_ani
 
     for (int i = 0; i < size; i++) {
         struct aiNodeAnim* channel = ai_animation->mChannels[i];
-        const char* bone_name = channel->mNodeName.data;
+        const char* bone_name = strdup(channel->mNodeName.data);
 
         if (shgeti(bone_info_map, bone_name) == -1) {
             bone_info_t info = {0};
