@@ -25,6 +25,7 @@ void processInput(GLFWwindow* window);
 
 const unsigned int SCR_WIDTH = 1980 / 2;
 const unsigned int SCR_HEIGHT = 1080 / 2;
+const float FPS = 60.0f;
 
 camera_t* camera;
 float lastX = SCR_WIDTH / 2.0f;
@@ -79,19 +80,19 @@ int main() {
     HeimVec3f cameraPos = {0.0f, 0.0f, 2.5f};
     camera = camera_init(cameraPos);
     shader_t* shader = shader_init("src/assets/shaders/anim_model.vs", "src/assets/shaders/anim_model.fs");
-    model_t* our_model = model_init("src/assets/models/Maria/Maria.glb", true);
+    model_t* our_model = model_init("src/assets/models/Maria/Maria.fbx", true);
 
     model_set_albedo(our_model, "src/assets/models/Maria/textures/maria_diffuse.png");
     model_set_normal(our_model, "src/assets/models/Maria/textures/maria_normal.png");
     model_set_metallic(our_model, "src/assets/models/Maria/textures/maria_specular.png");
 
-    animator = animator_init("src/assets/models/Maria/Maria.glb", our_model);
+    animator = animator_init("src/assets/models/Maria/Maria.fbx", our_model);
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
         processInput(window);
         animator_update(animator, deltaTime);
+        //printf("FPS: %f\n", 1.0f / deltaTime);
         glClearColor(0.15f, 0.05f, 0.15f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader_use(shader);
@@ -115,12 +116,16 @@ int main() {
         HeimMat4 model = heim_mat4_identity();
         HeimVec3f tranlation_vec = {0.0f, -0.8f, 0.0f};
         model = heim_mat4_translate(model, tranlation_vec);
-        HeimVec3f scale_vec = {0.9f, 0.9f, 0.9f};
+        HeimVec3f scale_vec = {0.009f, 0.009f, 0.009f};
         model = heim_mat4_scale(model, scale_vec);
         shader_set_mat4(shader, "model", model);
         model_draw(our_model, shader);
         glfwSwapBuffers(window);
         glfwPollEvents();
+        if (currentFrame - lastFrame < 1.0f / FPS) {
+            glfwWaitEventsTimeout(1.0f / FPS - (currentFrame - lastFrame));
+        }
+        lastFrame = currentFrame;
     }
     glfwTerminate();
     return 0;
@@ -186,6 +191,13 @@ void processInput(GLFWwindow* window) {
     }
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
         animator_switch_animation(animator, 9);
+    }
+
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+        //reset camera
+        camera->position = (HeimVec3f){0.0f, 0.0f, 2.5f};
+        camera->front = (HeimVec3f){0.0f, 0.0f, -1.0f};
+        camera->up = (HeimVec3f){0.0f, 1.0f, 0.0f};
     }
 
 }

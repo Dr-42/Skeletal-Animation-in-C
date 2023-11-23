@@ -18,7 +18,7 @@ char* dirname(const char* path);
 void load_model(model_t* model, const char* path);
 void process_node(model_t* model, struct aiNode* node, const struct aiScene* scene);
 void set_vertex_bone_data_to_default(vertex_t* vertex);
-mesh_t* process_mesh(model_t* model, struct aiMesh* mesh, const struct aiScene* scene);
+mesh_t* process_mesh(model_t* model, struct aiMesh* mesh);
 void set_vertex_bone_data(vertex_t* vertex, int bone_id, float weight);
 void extract_bone_weight_for_vertices(model_t* model, vertex_t* vertices, struct aiMesh* mesh);
 
@@ -88,7 +88,7 @@ void load_model(model_t* model, const char* path) {
 void process_node(model_t* model, struct aiNode* node, const struct aiScene* scene) {
     for (size_t i = 0; i < node->mNumMeshes; i++) {
         struct aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        mesh_t* m = process_mesh(model, mesh, scene);
+        mesh_t* m = process_mesh(model, mesh);
         arrput(model->meshes, *m);
     }
     for (size_t i = 0; i < node->mNumChildren; i++) {
@@ -103,7 +103,7 @@ void set_vertex_bone_data_to_default(vertex_t* vertex) {
     }
 }
 
-mesh_t* process_mesh(model_t* model, struct aiMesh* mesh, const struct aiScene* scene) {
+mesh_t* process_mesh(model_t* model, struct aiMesh* mesh) {
     vertex_t* vertices = NULL;
     uint32_t* indices = NULL;
     texture_t* textures = NULL;
