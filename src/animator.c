@@ -4,6 +4,7 @@
 #include "bone.h"
 #include "model.h"
 #include "utils/heim_mat.h"
+#include "utils/heim_vec.h"
 
 #include <stddef.h>
 #include <stdio.h>
@@ -54,7 +55,14 @@ void calculate_bone_transform(animator_t* animator, const struct assimp_node_dat
     bone_t* bone = find_bone(animator->current_animation, node_name);
     if(bone) {
         bone_update(bone, animator->current_time);
-        node_transform = bone->local_transform;
+        HeimVec3f position = bone->local_position;
+        HeimVec4f rotation = bone->local_rotation;
+        HeimVec3f scale = bone->local_scale;
+        HeimMat4 identity = heim_mat4_identity();
+        HeimMat4 translation = heim_mat4_translate(identity, position);
+        HeimMat4 rotation_mat = heim_mat4_from_quat(rotation);
+        HeimMat4 scale_mat = heim_mat4_scale(identity, scale);
+        node_transform = heim_mat4_multiply(translation, heim_mat4_multiply(rotation_mat, scale_mat));
     }
     HeimMat4 global_transform = heim_mat4_multiply(parent_transform, node_transform);
     bone_info_map_t* bone_info_map = animator->current_animation->bone_info_map;

@@ -30,7 +30,10 @@ typedef struct bone_t {
 	int32_t num_rotations;
 	int32_t num_scales;
 
-	HeimMat4 local_transform;
+	HeimVec3f local_position;
+	HeimVec4f local_rotation;
+	HeimVec3f local_scale;
+
 	const char* name;
 	int32_t id;
 } bone_t;
